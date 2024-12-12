@@ -11,7 +11,7 @@ const Server = () => {
 
   const MovieVideoPlayers = {
     "Tamil": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?tr=3&d=pikachu.app&?sinku`,
-    "vidsrc.cc": `https://vidsrc.cc/v2/embed/movie/${MovieId}`,
+    "Default": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?d=pikachu.app&?sinku`,
     vidsrc: `https://vidsrc.in/embed/movie/${MovieId}`,
     vidsrcpro: `https://vidsrc.pro/embed/movie/${MovieId}`,
     autoembed: `https://player.autoembed.cc/embed/movie/${MovieId}`,
@@ -19,7 +19,7 @@ const Server = () => {
 
   const TVVideoPlayers = {
     "Tamil": `http://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?tr=3&d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
-    "vidsrc.cc": `https://vidsrc.cc/v2/embed/tv/${MovieId}/${season}/${episode}`,
+    "Default": `http://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
     vidsrc: `https://vidsrc.in/embed/tv/${MovieId}/${season}/${episode}`,
     vidsrcpro: `https://vidsrc.pro/embed/tv/${MovieId}/${season}/${episode}`,
     autoembed: `https://player.autoembed.cc/embed/tv/${MovieId}/${season}/${episode}`,
