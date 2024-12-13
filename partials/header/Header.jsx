@@ -19,10 +19,10 @@ const Header = () => {
           <Link href={"/"} className={`${nightTokyo.className} text-white flex items-center gap-2`}>
             <Image
               src="/images/logo.png"
-              alt="movieVerse"
+              alt="CNCVERSE"
               width={50}
               height={50} />
-            <span className="text-3xl">MovieVerse</span>
+            <span className="text-3xl">CNCVERSE</span>
           </Link>
 
           {/* links */}
