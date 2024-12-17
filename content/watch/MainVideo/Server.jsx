@@ -18,8 +18,8 @@ const Server = () => {
   }
 
   const TVVideoPlayers = {
-    "Tamil": `http://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?tr=3&d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
-    "Default": `http://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
+    "Tamil": `https://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?tr=3&d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
+    "Default": `https://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
     vidsrc: `https://vidsrc.in/embed/tv/${MovieId}/${season}/${episode}`,
     vidsrcpro: `https://vidsrc.pro/embed/tv/${MovieId}/${season}/${episode}`,
     autoembed: `https://player.autoembed.cc/embed/tv/${MovieId}/${season}/${episode}`,
