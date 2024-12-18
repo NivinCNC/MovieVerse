@@ -1,25 +1,43 @@
 import { useWatchContext } from "@/context/Watch"
-import { useEffect } from "react"
-
+import { useEffect, useState } from "react"
+import { fetchMovies, fetchSeries } from './ServerComponent'
 const Server = () => {
   const { MovieId, setWatchInfo, watchInfo, MovieInfo, episode, season } = useWatchContext()
+  const [streamWishUrl, setStreamWishUrl] = useState(null);
 
   const defaultVideoServers = [
     "Vidsrc.net",
     "Vidlink"
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = MovieInfo?.type === "movie" ? await fetchMovies(MovieId) : await fetchSeries(MovieInfo?.name, season, episode);
+      if (result) {
+        setStreamWishUrl(result);
+      } else {
+        setWatchInfo({
+          url: null,
+          iframe: true,
+          loading: false,
+          message: "Failed to fetch movie data. Please choose another server."
+        });
+      }
+    };
+    fetchData();
+  }, [MovieInfo]);
+
   const MovieVideoPlayers = {
-    "Tamil": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?tr=3&d=pikachu.app&?sinku`,
-    "Default": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?d=pikachu.app&?sinku`,
+    "StreamWish": streamWishUrl,
+    "PikaShow": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?d=pikachu.app&?sinku`,
     vidsrc: `https://vidsrc.in/embed/movie/${MovieId}`,
     vidsrcpro: `https://vidsrc.pro/embed/movie/${MovieId}`,
     autoembed: `https://player.autoembed.cc/embed/movie/${MovieId}`,
   }
 
   const TVVideoPlayers = {
-    "Tamil": `https://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?tr=3&d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
-    "Default": `https://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
+    "StreamWish": streamWishUrl,
+    "PikaShow": `https://moviereqapi.onrender.com/play/s${MovieInfo.external_ids.imdb_id}?d=pikachu.app&?sinku&noseasons=${season}&noepisodes=${episode}`,
     vidsrc: `https://vidsrc.in/embed/tv/${MovieId}/${season}/${episode}`,
     vidsrcpro: `https://vidsrc.pro/embed/tv/${MovieId}/${season}/${episode}`,
     autoembed: `https://player.autoembed.cc/embed/tv/${MovieId}/${season}/${episode}`,
@@ -48,14 +66,26 @@ const Server = () => {
   }
 
   useEffect(() => {
-    setdefault()
-  }, [episode, season])
+    if (streamWishUrl) {
+      setdefault();
+    }
+  }, [episode, season, streamWishUrl]);
 
 
   const changeServer = async (item, isIframe = true) => {
     setWatchInfo({ loading: true });
 
     if (isIframe) {
+      if (item[0] === "StreamWish" && !streamWishUrl) {
+        setWatchInfo({
+          url: null,
+          iframe: true,
+          loading: false,
+          message: "Failed to fetch movie data. Please choose another server."
+        });
+        return;
+      }
+
       if (item) {
         setWatchInfo({
           url: item[1],
@@ -138,11 +168,6 @@ const Server = () => {
 
         </div>
       </div>
-
-
-
-
-
 
       <div className="bg-[#323044] w-full h-full px-4 flex items-center gap-8 max-[880px]:py-2">
 

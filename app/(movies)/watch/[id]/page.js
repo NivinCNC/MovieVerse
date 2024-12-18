@@ -14,8 +14,8 @@ import MovieNotFound from "@/components/errors/MovieNotFound"
 
 
 const Watch = async ({ params, searchParams }) => {
-  const { id: MovieId } = params
-  const { media_type } = searchParams
+  const { id: MovieId } = await params
+  const { media_type } = await searchParams
 
   const MovieInfo = await getInfoTMDB(MovieId, media_type)
   // Check if there's an error fetching the media type
