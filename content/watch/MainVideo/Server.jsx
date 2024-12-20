@@ -1,7 +1,6 @@
 import { useWatchContext } from "@/context/Watch"
 import { useEffect, useState } from "react"
-import { fetchMovies, fetchSeries } from '../../../lib/ServerComponent'
-import axios from "axios";
+import { fetchMovies, fetchSeries,fetchSeriesServerUrl,fetchMovieServerUrl } from '../../../lib/ServerComponent'
 const Server = () => {
   const { MovieId, setWatchInfo, watchInfo, MovieInfo, episode, season } = useWatchContext()
   const [streamWishUrl, setStreamWishUrl] = useState(null);
@@ -48,8 +47,8 @@ const Server = () => {
   const TVVideoPlayerEntry = Object.entries(TVVideoPlayers)
 
   const setdefault = () => {
-    if (MovieInfo?.type === "movie") {
-      changeServer("Vidsrc.net",false);
+    changeServer("Vidsrc.net",false);
+    // if (MovieInfo?.type === "movie") {
       // if (!watchInfo?.url) {
       //   setWatchInfo({
       //     url: MovievideoPlayerEntry[0][1],
@@ -57,14 +56,14 @@ const Server = () => {
       //     loading: false
       //   })
       // }
-    }
-    else {
-      setWatchInfo({
-        url: TVVideoPlayerEntry[0][1],
-        iframe: true,
-        loading: false
-      })
-    }
+    // }
+    // else {
+    //   setWatchInfo({
+    //     url: TVVideoPlayerEntry[0][1],
+    //     iframe: true,
+    //     loading: false
+    //   })
+    // }
   }
 
   useEffect(() => {
@@ -96,47 +95,8 @@ const Server = () => {
         });
       }
     } else {
-       const fetchServerUrl = async (movieId) => {
-        const payload = {
-            where: {
-                tmdbid: { $regex: movieId, $options: "i" },
-            },
-            order: "-createdAt",
-            limit: 999999999,
-            skip: 0,
-            _method: "GET",
-            _ApplicationId: "SHOWFLIXAPPID",
-            _ClientVersion: "js3.4.1",
-            _InstallationId: "951253bd-11ac-473f-b0b0-346e2d3d542f",
-        };
-    
-        try {
-            const response = await axios.post(
-                "https://parse.showflix.shop/parse/classes/movies/",
-                payload,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-    
-            if (response?.data?.results?.length > 0) {
-                const streamwish = response.data.results[0].streamwish;
-                const res = await fetch(`/api/extract?url=${streamwish ? `https://embedwish.com/e/${streamwish}.html` : null}`);
-                const data = await res.json();
-                return data;
-            }
-            return null;
-        } catch (error) {
-            console.error("Error fetching movies:", error.message);
-            return null;
-        }
-    };
-
       try {
-        const data = await fetchServerUrl(MovieId); // Wait for data before proceeding
-        console.log(data);
+        const data = MovieInfo?.type === "movie" ? await fetchMovieServerUrl(MovieId) : await fetchSeriesServerUrl(MovieInfo?.name, season, episode); // Wait for data before proceeding
           setWatchInfo({
             url:'',
             server: data.m3u8,
@@ -148,7 +108,7 @@ const Server = () => {
         
       } catch (error) {
         console.error("Error fetching server URL:", error);
-        setWatchInfo({ loading: false }); // Ensure loading state is reset
+        setWatchInfo({ loading: false }); 
       }
     }
   };
