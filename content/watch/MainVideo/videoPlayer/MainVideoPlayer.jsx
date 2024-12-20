@@ -73,9 +73,10 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
         title={(movieInfo?.title || movieInfo?.name)?.length > 20 ? `${(movieInfo?.title || movieInfo?.name).slice(0, 20)}...` : (movieInfo?.title || movieInfo?.name)}
         viewType='video'
         logLevel='warn'
+        autoPlay = {true}
         crossOrigin
         playsInline
-        src={`https://m3-u8-proxy-iota.vercel.app/m3u8-proxy?url=${encodeURIComponent(videoInfo?.server)}&headers=${encodeURIComponent(`{"referer": "${videoInfo?.referer}"}`)}`}
+        src={videoInfo?.server}
         onTimeUpdate={throttledSaveProgress}
         onDurationChange={e => setDuration(e)}
       >

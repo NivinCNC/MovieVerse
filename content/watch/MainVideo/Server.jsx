@@ -1,6 +1,7 @@
 import { useWatchContext } from "@/context/Watch"
 import { useEffect, useState } from "react"
-import { fetchMovies, fetchSeries } from './ServerComponent'
+import { fetchMovies, fetchSeries } from '../../../lib/ServerComponent'
+import axios from "axios";
 const Server = () => {
   const { MovieId, setWatchInfo, watchInfo, MovieInfo, episode, season } = useWatchContext()
   const [streamWishUrl, setStreamWishUrl] = useState(null);
@@ -48,13 +49,14 @@ const Server = () => {
 
   const setdefault = () => {
     if (MovieInfo?.type === "movie") {
-      if (!watchInfo?.url) {
-        setWatchInfo({
-          url: MovievideoPlayerEntry[0][1],
-          iframe: true,
-          loading: false
-        })
-      }
+      changeServer("Vidsrc.net",false);
+      // if (!watchInfo?.url) {
+      //   setWatchInfo({
+      //     url: MovievideoPlayerEntry[0][1],
+      //     iframe: true,
+      //     loading: false
+      //   })
+      // }
     }
     else {
       setWatchInfo({
@@ -94,46 +96,56 @@ const Server = () => {
         });
       }
     } else {
-      const fetchServerUrl = async () => {
-        const BASE_URL = "https://vidsrc-scraper-three.vercel.app/";
-        const response = await fetch(
-          BASE_URL +
-          (item === "Vidsrc.net" ? "vidsrc" : item === "Vidlink" ? "vidlink" : "upcloud") +
-          `/watch?isMovie=${MovieInfo?.type === "movie"}&id=${MovieId}` +
-          (MovieInfo?.type !== "movie" ? `&episode=${episode}&season=${season}` : "")
-        );
-
-        if (!response.ok) {
-          setdefault(); // Ensure this function handles errors appropriately
-          return null; // Return null on error to handle below
+       const fetchServerUrl = async (movieId) => {
+        const payload = {
+            where: {
+                tmdbid: { $regex: movieId, $options: "i" },
+            },
+            order: "-createdAt",
+            limit: 999999999,
+            skip: 0,
+            _method: "GET",
+            _ApplicationId: "SHOWFLIXAPPID",
+            _ClientVersion: "js3.4.1",
+            _InstallationId: "951253bd-11ac-473f-b0b0-346e2d3d542f",
+        };
+    
+        try {
+            const response = await axios.post(
+                "https://parse.showflix.shop/parse/classes/movies/",
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            if (response?.data?.results?.length > 0) {
+                const streamwish = response.data.results[0].streamwish;
+                const res = await fetch(`/api/extract?url=${streamwish ? `https://embedwish.com/e/${streamwish}.html` : null}`);
+                const data = await res.json();
+                return data;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error fetching movies:", error.message);
+            return null;
         }
-        const jsondata = await response.json();
-        if (item === "Vidsrc.net") {
-          return jsondata;
-        }
-        else if (item === "Vidlink") {
-          return {
-            url: jsondata?.stream?.playlist,
-            referer: ""
-          }
-        }
-      };
+    };
 
       try {
-        const data = await fetchServerUrl(); // Wait for data before proceeding
+        const data = await fetchServerUrl(MovieId); // Wait for data before proceeding
         console.log(data);
-        if (data) {
           setWatchInfo({
-            server: data.url,
+            url:'',
+            server: data.m3u8,
             item: item,
-            referer: data.referer,
+            referer: "",
             iframe: false,
             loading: false,
           });
-        } else {
-          // Handle the case where data is null (e.g., when the fetch fails)
-          setWatchInfo({ loading: false }); // Update loading state
-        }
+        
       } catch (error) {
         console.error("Error fetching server URL:", error);
         setWatchInfo({ loading: false }); // Ensure loading state is reset
