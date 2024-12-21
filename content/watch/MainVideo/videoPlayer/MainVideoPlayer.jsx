@@ -1,8 +1,9 @@
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
-import { MediaPlayer, MediaProvider, useMediaRemote, useMediaStore } from '@vidstack/react';
+import { MediaPlayer, MediaProvider, useMediaRemote , isHLSProvider,
+   MediaProviderAdapter,
+   MediaProviderChangeEvent, } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
-import { FaPlay } from "react-icons/fa6";
 import { useWatchContext } from '@/context/Watch';
 import { SaveProgress } from '@/utils/saveProgress';
 import { useEffect, useRef, useState } from 'react';
@@ -24,6 +25,18 @@ function throttle(func, limit) {
       }, Math.max(limit - (Date.now() - lastRan), 0));
     }
   };
+}
+
+function onProviderChange(
+  provider,
+) {
+  if (isHLSProvider(provider)) {
+    provider.config = {
+      xhrSetup(xhr) {
+        xhr.setRequestHeader('Referer', `https://embedwish.com/`);
+      },
+    };
+  }
 }
 
 
@@ -69,6 +82,7 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
   return (
     <div className="aspect-video">
       <MediaPlayer
+        onProviderChange={onProviderChange}
         ref={playerRef}
         title={(movieInfo?.title || movieInfo?.name)?.length > 20 ? `${(movieInfo?.title || movieInfo?.name).slice(0, 20)}...` : (movieInfo?.title || movieInfo?.name)}
         viewType='video'
@@ -76,7 +90,7 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
         autoPlay = {true}
         crossOrigin
         playsInline
-        src={`/api/proxy?url=${encodeURIComponent(videoInfo?.server)}&referer=${encodeURIComponent(videoInfo?.referer)}`}
+        src={`${videoInfo?.server}`}
         onTimeUpdate={throttledSaveProgress}
         onDurationChange={e => setDuration(e)}
       >
