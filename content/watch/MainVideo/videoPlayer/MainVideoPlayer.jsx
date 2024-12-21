@@ -76,7 +76,7 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
         autoPlay = {true}
         crossOrigin
         playsInline
-        src={videoInfo?.server}
+        src={`/api/proxy?url=${encodeURIComponent(videoInfo?.server)}&referer=${encodeURIComponent(videoInfo?.referer)}`}
         onTimeUpdate={throttledSaveProgress}
         onDurationChange={e => setDuration(e)}
       >
