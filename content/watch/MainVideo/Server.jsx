@@ -47,23 +47,23 @@ const Server = () => {
   const TVVideoPlayerEntry = Object.entries(TVVideoPlayers)
 
   const setdefault = () => {
-    changeServer("Vidsrc.net",false);
-    // if (MovieInfo?.type === "movie") {
-      // if (!watchInfo?.url) {
-      //   setWatchInfo({
-      //     url: MovievideoPlayerEntry[0][1],
-      //     iframe: true,
-      //     loading: false
-      //   })
-      // }
-    // }
-    // else {
-    //   setWatchInfo({
-    //     url: TVVideoPlayerEntry[0][1],
-    //     iframe: true,
-    //     loading: false
-    //   })
-    // }
+    // changeServer("Vidsrc.net",false);
+    if (MovieInfo?.type === "movie") {
+      if (!watchInfo?.url) {
+        setWatchInfo({
+          url: MovievideoPlayerEntry[0][1],
+          iframe: true,
+          loading: false
+        })
+      }
+    }
+    else {
+      setWatchInfo({
+        url: TVVideoPlayerEntry[0][1],
+        iframe: true,
+        loading: false
+      })
+    }
   }
 
   useEffect(() => {
