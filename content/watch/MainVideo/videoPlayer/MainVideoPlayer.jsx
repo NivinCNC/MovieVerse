@@ -74,7 +74,7 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
         viewType='video'
         logLevel='warn'
         autoPlay={true}
-        crossOrigin
+        crossOrigin="anonymous"
         playsInline
         src={videoInfo?.server}
         onTimeUpdate={throttledSaveProgress}
