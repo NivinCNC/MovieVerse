@@ -11,6 +11,10 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <meta name="referrer" content="no-referrer" />
+        <title>CNCVerse</title>
+      </head>
       <body className={inter.className}>
 
         <Header />
