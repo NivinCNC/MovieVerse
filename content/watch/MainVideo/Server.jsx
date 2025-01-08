@@ -101,7 +101,7 @@ const Server = () => {
             url:'',
             server: data.m3u8,
             item: item,
-            referer: "https://embedwish.com",
+            referer: "https://embedwish.com/",
             iframe: false,
             loading: false,
           });

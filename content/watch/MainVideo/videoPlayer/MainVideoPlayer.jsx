@@ -66,6 +66,12 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
     startFromWhereItwasLeft()
   }, [videoInfo])
 
+  
+    const proxy_url      = '/api/proxy.m3u8?url='
+    const video_url      =  videoInfo?.server
+    const hls_proxy_url  = `${proxy_url}${encodeURIComponent(video_url)}`
+  
+
   return (
     <div className="aspect-video">
       <MediaPlayer
@@ -76,7 +82,7 @@ const MainVideoPlayer = ({ videoInfo, movieInfo }) => {
         autoPlay={true}
         crossOrigin="anonymous"
         playsInline
-        src={videoInfo?.server}
+        src={hls_proxy_url}
         onTimeUpdate={throttledSaveProgress}
         onDurationChange={e => setDuration(e)}
       >
