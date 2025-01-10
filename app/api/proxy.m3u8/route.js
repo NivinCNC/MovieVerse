@@ -45,11 +45,7 @@ export async function GET(request) {
         // Return the processed m3u8 content with the proper headers
         return new Response(masterM3U8, {
             status: 200,
-            headers: {
-                'Content-Type': 'application/vnd.apple.mpegurl',
-                'Access-Control-Allow-Origin': '*',
-                'Cache-Control': 'no-cache',
-            },
+            headers: response.headers,
         });
     } catch (error) {
         console.error('Error fetching master.m3u8:', error.message);

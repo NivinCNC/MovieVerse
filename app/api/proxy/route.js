@@ -14,27 +14,17 @@ export async function GET(request) {
     }
     console.log('targetServer:', targetServer);
     try {
-        const response = await axios.get(targetServer,
-            {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-                    'Referer': 'https://embedwish.com/',
-                    'Accept': '*/*',
-                    'Connection': 'keep-alive',
-                    'Origin': 'https://embedwish.com',
-                }
-            }
-        );
-     
-        console.log('masterM3U8:', response.data);
+        const response = await axios.get(targetServer);
+        masterM3U8 = response.data;
+        masterM3U8 = masterM3U8.replace(/https:\/\/[^\n#]+/g, (url) => {
+            const encodedUrl = url;
+            return `/api/vid.ts?url=${encodeURIComponent(url)}`;
+          });     
+        console.log('masterM3U8:',masterM3U8);
         // Return the processed m3u8 content with the proper headers
-        return new Response(response.data, {
+        return new Response(masterM3U8, {
             status: 200,
-            headers: {
-                'Content-Type': 'application/vnd.apple.mpegurl',
-                'Access-Control-Allow-Origin': '*',
-                'Cache-Control': 'no-cache',
-            },
+            headers: response.headers,
         });
     } catch (error) {
         console.error('Error fetching master.m3u8:', error.message);
