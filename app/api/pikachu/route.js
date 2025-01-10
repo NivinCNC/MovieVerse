@@ -26,6 +26,7 @@ export async function GET(request) {
                 "X-Requested-With": "com.offshore.pikachu",
             }
         });
+        response.headers.set("Accept-Encoding", "gzip, deflate");
     
         if (!response.ok) {
           return new Response(JSON.stringify({ error: `Failed to fetch VOD: ${response.statusText}` }), { status: response.status });
