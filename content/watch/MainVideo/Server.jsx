@@ -28,7 +28,7 @@ const Server = () => {
 
   const MovieVideoPlayers = {
     "StreamWish": streamWishUrl,
-    "PikaShow": `/api/pikachu?url=https://vanoe325lpp.com/play/${MovieInfo.imdb_id}?d=pikachu.app&?sinku`,
+    "PikaShow": `https://moviereqapi.onrender.com/play/${MovieInfo.imdb_id}?d=pikachu.app&?sinku`,
     vidsrc: `https://vidsrc.in/embed/movie/${MovieId}`,
     vidsrcpro: `https://vidsrc.pro/embed/movie/${MovieId}`,
     autoembed: `https://player.autoembed.cc/embed/movie/${MovieId}`,
