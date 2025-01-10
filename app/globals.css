@@ -24,12 +24,8 @@ body {
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
-::-webkit-scrollbar {
-  width: 5px;
-  background-color: transparent;
-}
 
-::-webkit-scrollbar:horizontal {
+::-webkit-scrollbar {
   display: none;
 }
 
