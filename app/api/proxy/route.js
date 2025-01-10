@@ -5,14 +5,12 @@ export async function GET(request) {
     const query = url.searchParams;
     const targetServer = query.get('url');
     let masterM3U8;
-    console.log('targetServer:', targetServer);
     if (!targetServer) {
         return new Response(
             JSON.stringify({ error: 'URL parameter is required' }),
             { status: 400 }
         );
     }
-    console.log('targetServer:', targetServer);
     try {
         const response = await axios.get(targetServer);
         masterM3U8 = response.data;
@@ -20,7 +18,6 @@ export async function GET(request) {
             const encodedUrl = url;
             return `/api/vid.ts?url=${encodeURIComponent(url)}`;
           });     
-        console.log('masterM3U8:',masterM3U8);
         // Return the processed m3u8 content with the proper headers
         return new Response(masterM3U8, {
             status: 200,

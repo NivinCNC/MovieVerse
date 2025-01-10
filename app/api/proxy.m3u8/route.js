@@ -6,7 +6,6 @@ export async function GET(request) {
     const query = url.searchParams;
     const targetServer = query.get('url');
     let masterM3U8;
-    console.log('targetServer:', targetServer);
     if (!targetServer) {
         return new Response(
             JSON.stringify({ error: 'URL parameter is required' }),
@@ -41,8 +40,6 @@ export async function GET(request) {
             const finalUrlT = '\n' + finalUrl;
             return finalUrlT.replace(/#(?!.*#)/, '\n#');
         });
-        console.log('masterM3U8:', masterM3U8);
-        // Return the processed m3u8 content with the proper headers
         return new Response(masterM3U8, {
             status: 200,
             headers: response.headers,

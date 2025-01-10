@@ -28,6 +28,11 @@ body {
   width: 5px;
   background-color: transparent;
 }
+
+::-webkit-scrollbar:horizontal {
+  display: none;
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: #20212d;
   border-radius: 10px;
